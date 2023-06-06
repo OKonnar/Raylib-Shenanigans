@@ -7,46 +7,46 @@
 
 ## MAKE SHENANIGANS ##
 
-MAKEFLAGS += -j16 -l16 -s
+MAKEFLAGS += -j16 -l16
 
 ## ALL ##
 
-all: FRAMEWORK
+all: game
 
 ## FRAMEWORK ##
 
-FRAMEWORK_NAME				=   raylibFramework
-FRAMEWORK_BINARIES			=   $(shell find ./raylibFramework -name "*.cpp")
+GAME_NAME				=   game
+GAME_BINARIES			=   $(shell find ./src -name "*.cpp")
 CXX     				=   g++
-CXXFLAGS  				=  	-std=c++20 -Wall -Wextra -O3 -fopenmp -lGL -lm -lpthread -ldl -lnsl -lrt -lX11
-EXTERNAL_FRAMEWORK_LIB		=	-L./raylibFramework/raylib -lraylib
-FRAMEWORK_INCLUDE_PATH		=	-I./src/include -I./raylib
+CXXFLAGS  				=  	-std=c++20 -Wno-missing-field-initializers -Wall -Wextra -O3 -fopenmp -lGL -lm -lpthread -ldl -lnsl -lrt -lX11
+EXTERNAL_GAME_LIB		=	-L./raylib -lraylib
+GAME_INCLUDE_PATH		=	-I./src/include -I./raylib
 
-FRAMEWORK: $(FRAMEWORK_NAME)
+GAME: $(GAME_NAME)
 
-$(FRAMEWORK_NAME): $(FRAMEWORK_BINARIES)
-	@echo "$(BBLUE)Compiling $(BWHITE)$(FRAMEWORK_NAME)$(NO_COLOR)"
-	@$(CXX) $(FRAMEWORK_INCLUDE_PATH) -o $@ $^ $(EXTERNAL_FRAMEWORK_LIB) $(CXXFLAGS); \
+$(GAME_NAME): $(GAME_BINARIES)
+	@echo "Compiling $(GAME_NAME)"
+	@$(CXX) $(GAME_INCLUDE_PATH) -o $@ $^ $(EXTERNAL_GAME_LIB) $(CXXFLAGS); \
 	if [ $$? -eq 0 ]; then \
-		echo "$(BGREEN)Compilation successful.$(NO_COLOR)"; \
+		echo "Compilation successful."; \
 	else \
-		echo "$(BRED)Compilation failed.$(NO_COLOR)"; exit 2; \
+		echo "Compilation failed."; exit 2; \
 	fi
 
 %.o: %.cpp
-	$(CXX) $(FRAMEWORK_INCLUDE_PATH)  -c $< -o $@ $(CXXFLAGS)
+	$(CXX) $(GAME_INCLUDE_PATH)  -c $< -o $@ $(CXXFLAGS)
 
 ## clean ##
 
 clean:
-	@rm -f $(FRAMEWORK_OBJS) $(SERVER_OBJS)
-	@echo "$(BBLUE)Cleaned $(BBROWN).o$(NO_COLOR)"
+	@rm -f $(GAME_OBJS)
+	@echo "Cleaned .o"
 
 ## fclean ##
 
 fclean: clean
-	@rm -f $(FRAMEWORK_NAME) $(SERVER_NAME) $(AI_NAME)
-	@echo "$(BBLUE)Cleaned $(BWHITE)$(FRAMEWORK_NAME)$(BBLUE) & $(BWHITE)$(SERVER_NAME)$(NO_COLOR)"
+	@rm -f $(GAME_NAME) $(SERVER_NAME) $(AI_NAME)
+	@echo "Cleaned $(GAME_NAME)"
 
 ## re ##
 
